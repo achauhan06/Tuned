@@ -1,0 +1,37 @@
+<div>
+    <app-header [loggedIn]="true" [showUsername]="userName"></app-header>
+
+<div class="container-fluid" >
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar" >
+        <div class="sidebar-sticky">
+            <h6 class="sidebar-heading d-flex justify-content-between 
+                align-items-center px-3 mt-4 mb-1 text-muted
+                ">
+                <span class="side-bar-header">{{selectMsg}}</span>
+            </h6>
+            <ul class="nav flex-column">  
+                <li [ngClass]="{'nav-item active' : item.id === listId,  'nav-item' : item.id !== listId}" 
+                *ngFor = "let item of setList;">
+                    <a class="nav-link"  (click)="updateSong(item)">
+                        <span data-feather="file"></span>
+                        {{item.title}}
+                    </a>
+                </li>
+            </ul>
+  
+
+          
+        </div>
+      </nav>
+      <main role="main" class="col-md-9 ml-sm-auto
+       col-lg-10 px-4 main-content">
+        <app-playlist-view [data]="songsData" [userType] = "userType" (deleteSongFromList)="deleteSongFromList($event)"
+        (addNew) = "addItem($event)" [listEmpty]="setList.length==0" [userId]="userId" (deleteList)="deleteList()"
+        [heading]="listName"></app-playlist-view>
+      </main>
+      
+    </div>
+  </div>
+  
+</div>

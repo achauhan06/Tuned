@@ -1,0 +1,56 @@
+.category-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-header {
+    background-color: rgba(41, 46, 50, 0.91);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    color: white;
+}
+
+.category-body{
+    background: #7b7b7bde;
+    color: black !important;
+}
+
+.table{
+    color: whitesmoke;
+}
+
+.table-hover tbody tr:hover {
+    color: #212529;
+    background-color: whitesmoke;
+}
+
+.card-img-top {
+    margin: 15px;
+}
+
+.songsByCategory{
+    width: 100%;
+}
+
+.modal-footer{
+    justify-content: center;
+}
+
+//player
+
+.audio-cont{
+    width: 100%;
+    padding: 15px;
+    margin-left: -10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+
+audio{
+    position: relative !important;
+    //float: left;
+    width: 50%;
+    filter: sepia(35%) saturate(0%) grayscale(52) contrast(90%) invert(100%);
+
+}

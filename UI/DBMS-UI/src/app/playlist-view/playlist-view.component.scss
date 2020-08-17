@@ -1,0 +1,54 @@
+
+
+.table-hover tbody tr:hover {
+   
+    background-color: rgba(40, 49, 44, 0.45);
+}
+
+.button-cont{
+    width: 10%;
+}
+
+.button-area{
+    width: 100%;
+}
+
+.modal-footer{
+    justify-content: center;
+}
+
+table{
+    .btn.focus, .btn:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+    .btn .badge {
+        top: 1px;
+    }
+    .badge-light {
+         background-color: unset; 
+    }
+}
+
+
+
+
+//player
+
+.audio-cont{
+    width: 100%;
+    padding: 15px;
+    margin-left: -10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+
+audio{
+    position: relative !important;
+    //float: left;
+    width: 50%;
+    filter: sepia(35%) saturate(0%) grayscale(52) contrast(90%) invert(100%);
+
+}

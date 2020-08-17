@@ -1,0 +1,194 @@
+
+
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap 
+  align-items-center pt-3  mb-2">
+    <h1 class="h2">{{heading}}</h1>
+    <div class="btn btn-group" style="width: 40%;">
+      <button type="button" class="btn btn-sm btn-outline-secondary button-area" data-toggle="modal" 
+        data-target="#newPlaylistModal">CREATE NEW {{listType[userType] | uppercase}}</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary button-area"
+       (click)="deleteListFromUser()">DELETE {{listType[userType] | uppercase}}</button> <!--TOTDO MODAL-->
+    </div>
+  </div>
+  <div class="alert alert-info" *ngIf="listEmpty">You do not have any {{listType[userType]}}.</div>
+  <div class="alert alert-info"  *ngIf="!listEmpty && !data.length">No songs in your list. Search songs to add to your list.</div>
+  
+<!-- PLAYER -->
+
+<div class="alert alert-info alert-dismissible fade show success-msg" role="alert" *ngIf="songPreviewURL == 'false'">
+  <strong>OOPS! No preview available!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div style="height: 100%; overflow: hidden;" >
+  <div *ngIf="songPreviewURL && songPreviewURL!=='false'">
+
+    
+    <div class="audio-cont">
+      <audio controls class="embed-responsive-item">
+        <source [attr.src]="songPreviewURL">
+      </audio>
+    </div>
+  
+  
+  </div>
+  
+  <!-- PLAYER END -->
+  <div class="table-responsive" *ngIf="data.length">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Duration</th>
+          <th>Popularity</th>
+          <th>Play</th>
+          <th *ngIf="canDoActions"></th>
+          <th *ngIf="!canDoActions">Favorites</th>
+          <th *ngIf="!canDoActions">Likes</th>
+          <th *ngIf="!canDoActions">Dislikes</th>
+          <!-- <th *ngIf="!canDoActions">Comments</th> -->
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let song of data; index as i;" id="p{{i}}">
+          <td>{{i + 1}}</td>
+          <td>{{song.title}}</td>
+          <td>{{song.time}}</td>
+          <td>{{song.popularity}}</td>
+          <td>
+            <button class="btn btn-default" type="button" 
+            (click)="setSongPreviewURL(song)">
+              <fa-icon [icon]="faPlay"></fa-icon>
+            </button>
+          </td>
+          <td *ngIf="canDoActions">
+            <button type="button" class="btn btn-default" (click)="setFavoriteSong(song)">
+              <span *ngIf="song.favorite">
+                <fa-icon [icon]="faFavoriteTrue" ></fa-icon>
+              </span>
+              <span *ngIf="!song.favorite">
+                <fa-icon [icon]="faFavoriteFalse"></fa-icon>
+              </span>
+            </button> 
+            <button type="button" class="btn btn-default" (click)="likeSong(song)" *ngIf="song.dislike!=true">
+              <span class="badge badge-light">{{song.numOfLikes}}</span>
+              <span *ngIf="song.like">
+                <fa-icon [icon]="faLikeTrue" ></fa-icon>
+              </span>
+              <span *ngIf="!song.like">
+                <fa-icon [icon]="faLikeFalse"></fa-icon>
+              </span>
+              
+            </button>
+            <button type="button" class="btn btn-default" (click)="dislikeSong(song)" *ngIf="song.like!=true">
+              <span class="badge badge-light">{{song.numOfDislikes}}</span>
+              <span *ngIf="song.dislike">
+                <fa-icon [icon]="faDislikeTrue" ></fa-icon>
+              </span>
+              <span *ngIf="!song.dislike">
+                <fa-icon [icon]="faDislikeFalse"></fa-icon>
+              </span>
+        
+            </button>
+            <!-- <button type="button" class="btn btn-default" (click)="showComments(song)"
+            data-toggle="modal" data-target="#commentsModal">
+              <span class="badge badge-light">{{song.numOfComments}}</span>
+              <fa-icon [icon]="faComment"></fa-icon>
+            </button>  -->
+          </td>
+          <td *ngIf="!canDoActions">
+            {{song.numOfFavorites || 0}}
+          </td>
+          <td *ngIf="!canDoActions">
+            {{song.numOfLikes || 0}}
+              
+          </td>
+          <td *ngIf="!canDoActions">
+            {{song.numOfDislikes || 0}}
+          </td>
+          <!-- <td *ngIf="!canDoActions">
+            <span>{{song.numOfComments}}</span>
+            <button type="button" class="btn btn-default" (click)="showComments(song)"
+            data-toggle="modal" data-target="#commentsModal">
+              <fa-icon [icon]="faComment"></fa-icon>
+            </button> 
+          </td> -->
+          <td>
+            <button type="button" (click)="deleteSongFromList(song)" class="btn btn-default">
+              <fa-icon [icon]="faDelete"></fa-icon>
+            </button>
+          </td>
+          
+          
+        </tr>
+        
+        
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- For adding new playlist -->
+  <div class="modal fade " id="newPlaylistModal" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="newPlaylistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newPlaylistModalLabel">Add New {{listType[userType] | titlecase}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="plName">{{listType[userType] | titlecase}}s Name</label>
+              <input type="text" class="form-control" id="plName" name="plName" required
+              [(ngModel)]="name" aria-describedby="emailHelp" #plName="ngModel">
+              <div *ngIf="plName.invalid && (plName.dirty || plName.touched)"
+                class="alert alert-light">
+                <div *ngIf="plName.errors.required">
+                  {{listType[userType] | titlecase}} name is required.
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="addNewItemInList()"
+          data-dismiss="modal">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- For Viewing / Adding comments  -->
+  <div class="modal fade" id="commentsModal" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="commentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentsModalLabel">Comments</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-comments [comments]="comments" [userId]="userId" (updateComments)="updateComments($event)"
+          [songId]="commentSongId" [canComment]="canDoActions"></app-comments>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary"
+          data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
